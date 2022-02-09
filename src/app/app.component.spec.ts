@@ -3,8 +3,8 @@ import {
   fakeAsync,
   TestBed,
 } from '@angular/core/testing';
-import { App } from '../__mocks__/@capacitor/app';
-import { Capacitor } from '../__mocks__/@capacitor/capacitor';
+import { App } from '@capacitor/app';
+import { Capacitor } from '@capacitor/core';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -57,11 +57,9 @@ describe('AppComponent', () => {
       fixture.whenStable();
 
       expect(Capacitor.isNativePlatform()).toBeTrue();
-      // throw an error:
-      // > Error: Expected spy removeAllListeners to have been called once. It was called 0 times.
-      // expect(App.removeAllListeners).toHaveBeenCalledTimes(1);
 
       expect(App.removeAllListeners).toHaveBeenCalled();
+      expect(App.removeAllListeners).toHaveBeenCalledTimes(1);
     }));
 
     it('should not call App.removeAllListeners on web app', fakeAsync(() => {
