@@ -1,8 +1,14 @@
 import {
   Component,
+  NgZone,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
-import { App } from '@capacitor/app';
+import {
+  App,
+  URLOpenListenerEvent,
+} from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
 import { Subject } from 'rxjs';
 
@@ -11,10 +17,17 @@ import { Subject } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'x2';
 
   private destroy$ = new Subject<void>();
+
+  constructor(private readonly zone: NgZone) {
+  }
+
+  ngOnInit(): void {
+    this.initializeGlobalListenersForMobileApp();
+  }
 
   ngOnDestroy(): void {
     if (Capacitor.isNativePlatform()) {
@@ -23,5 +36,19 @@ export class AppComponent implements OnDestroy {
 
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private initializeGlobalListenersForMobileApp(): void {
+    if (Capacitor.isNativePlatform()) {
+      App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+        this.zone.run(() => {
+          if (event.url.includes('myapp://auth')) {
+            Browser.close();
+            Browser.removeAllListeners();
+            // todo: do something
+          }
+        });
+      });
+    }
   }
 }
