@@ -4,17 +4,15 @@ import {
   TestBed,
 } from '@angular/core/testing';
 import {
+  App,
   AppState,
   BackButtonListenerEvent,
   RestoredListenerEvent,
+  URLOpenListener,
   URLOpenListenerEvent,
 } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
-import {
-  App,
-  URLOpenListener,
-} from '../__mocks__/@capacitor/app';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
